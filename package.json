@@ -5,7 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "npm run build:index && tsc -b && vite build",
+    "build:index": "tsx scripts/build-index.ts",
+    "build:index:force": "tsx scripts/build-index.ts --force",
     "lint": "eslint .",
     "preview": "vite preview",
     "format": "prettier --write ."
@@ -13,7 +15,7 @@
   "dependencies": {
     "@fontsource-variable/ibm-plex-sans": "^5.0.0",
     "@fontsource/ibm-plex-mono": "^5.0.0",
-    "@sourcifyeth/clear-signing": "github:sourcifyeth/clear-signing",
+    "@sourcifyeth/clear-signing": "git+https://github.com/sourcifyeth/clear-signing.git",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "viem": "^2.0.0"
@@ -32,6 +34,8 @@
     "globals": "^15.0.0",
     "prettier": "^3.0.0",
     "tailwindcss": "^4.0.0",
+    "@types/node": "^22.0.0",
+    "tsx": "^4.0.0",
     "typescript": "^5.0.0",
     "typescript-eslint": "^8.0.0",
     "vite": "^6.0.0"
