@@ -1,0 +1,34 @@
+@import "tailwindcss";
+@import "@fontsource-variable/ibm-plex-sans";
+@import "@fontsource/ibm-plex-mono";
+
+@theme {
+  --color-cerulean-50: #e8efff;
+  --color-cerulean-100: #d4e1ff;
+  --color-cerulean-200: #a8c3ff;
+  --color-cerulean-300: #7da5ff;
+  --color-cerulean-400: #5387ff;
+  --color-cerulean-500: #2b50aa;
+  --color-cerulean-600: #234191;
+  --color-cerulean-700: #1b3278;
+  --color-cerulean-800: #13235f;
+  --color-cerulean-900: #08132f;
+
+  --color-coral-50: #fff0f1;
+  --color-coral-100: #ffccd0;
+  --color-coral-200: #ffaab0;
+  --color-coral-300: #ff858d;
+  --color-coral-400: #ff6b75;
+  --color-coral-500: #ff858d;
+  --color-coral-600: #d4444d;
+  --color-coral-700: #a82e36;
+  --color-coral-800: #7c1c22;
+  --color-coral-900: #5d0e13;
+
+  --font-sans: "IBM Plex Sans Variable", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+}
+
+html {
+  font-family: var(--font-sans);
+}
