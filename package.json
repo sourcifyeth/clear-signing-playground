@@ -15,7 +15,7 @@
   "dependencies": {
     "@fontsource-variable/ibm-plex-sans": "^5.0.0",
     "@fontsource/ibm-plex-mono": "^5.0.0",
-    "@sourcifyeth/clear-signing": "git+https://github.com/sourcifyeth/clear-signing.git",
+    "@sourcifyeth/clear-signing": "git+https://github.com/sourcifyeth/clear-signing.git#f179da682bab1965cf891a3fb006f4c7c39a4abb",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "viem": "^2.0.0"

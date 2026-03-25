@@ -1,8 +1,10 @@
 import type {
   DisplayModel,
   DisplayField,
+  DisplayFieldGroup,
   Warning,
 } from "@sourcifyeth/clear-signing";
+import { isFieldGroup } from "@sourcifyeth/clear-signing";
 import { WarningBanner } from "./WarningBanner";
 import { MetadataPopover } from "./MetadataPopover";
 
@@ -95,6 +97,39 @@ function FieldRow({ field }: { field: DisplayField }) {
           <FieldWarning warning={field.warning} />
         )}
       </dd>
+    </div>
+  );
+}
+
+function FieldGroupDisplay({ group }: { group: DisplayFieldGroup }) {
+  return (
+    <div className="border-b border-gray-100 py-2.5 last:border-b-0">
+      {group.label !== undefined && (
+        <div className="mb-2 flex items-center gap-2">
+          <h4 className="text-sm font-semibold text-gray-700">{group.label}</h4>
+          {group.warning !== undefined && (
+            <FieldWarning warning={group.warning} />
+          )}
+        </div>
+      )}
+      {group.warning !== undefined && group.label === undefined && (
+        <div className="mb-2">
+          <FieldWarning warning={group.warning} />
+        </div>
+      )}
+      {group.fields.length > 0 ? (
+        <div className="rounded-md border border-gray-100 bg-gray-50/50 pl-3 sm:pl-4">
+          <dl className="space-y-0">
+            {group.fields.map((field, index) => (
+              <FieldRow key={index} field={field} />
+            ))}
+          </dl>
+        </div>
+      ) : (
+        group.warning === undefined && (
+          <p className="text-xs italic text-gray-400">Empty</p>
+        )
+      )}
     </div>
   );
 }
@@ -206,9 +241,13 @@ export function ClearSigningDisplay({ model }: ClearSigningDisplayProps) {
       {model.fields !== undefined && model.fields.length > 0 && (
         <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm sm:p-6">
           <dl className="space-y-0">
-            {model.fields.map((field, index) => (
-              <FieldRow key={index} field={field} />
-            ))}
+            {model.fields.map((field, index) =>
+              isFieldGroup(field) ? (
+                <FieldGroupDisplay key={index} group={field} />
+              ) : (
+                <FieldRow key={index} field={field} />
+              ),
+            )}
           </dl>
         </div>
       )}
