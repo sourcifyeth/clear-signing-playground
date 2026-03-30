@@ -31,7 +31,7 @@ function App() {
     null,
   );
   const [displayModel, setDisplayModel] = useState<DisplayModel | null>(null);
-  const [activeView, setActiveView] = useState<"raw" | "clear">("raw");
+  const [activeView, setActiveView] = useState<"raw" | "clear">("clear");
   const [loadingTx, setLoadingTx] = useState(false);
   const [loadingFormat, setLoadingFormat] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -76,7 +76,6 @@ function App() {
     setDisplayModel(null);
     setLoadingTx(true);
     setLoadingFormat(false);
-    setActiveView("raw");
 
     const currentClient = client;
 
@@ -153,7 +152,6 @@ function App() {
       setDisplayModel(null);
       setLoadingTx(true);
       setLoadingFormat(false);
-      setActiveView("raw");
 
       const currentClient = client;
 
