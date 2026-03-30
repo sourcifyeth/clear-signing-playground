@@ -230,36 +230,42 @@ export function ClearSigningDisplay({ model }: ClearSigningDisplayProps) {
             Clear Transaction
           </h3>
 
-          {/* Interacting with */}
-          {model.metadata?.contractName !== undefined && (
-            <p className="mb-2 text-base font-medium text-gray-500">
-              Interacting with:{" "}
-              <span className="text-cerulean-700">
-                {model.metadata.contractName}
-              </span>
-            </p>
-          )}
-
-          {/* Interpolated intent */}
-          {model.interpolatedIntent !== undefined && (
-            <p className="mb-4 text-base font-medium text-gray-500">
-              Intent:{" "}
-              <span className="text-cerulean-700">
-                {model.interpolatedIntent}
-              </span>
-            </p>
-          )}
-
-          {/* Intent (fallback when no interpolated intent) */}
-          {model.intent !== undefined &&
-            model.interpolatedIntent === undefined && (
-              <div className="mb-4 text-base font-medium text-gray-500">
-                Intent:{" "}
-                <span className="text-cerulean-700">
-                  <IntentDisplay intent={model.intent} />
+          {/* Interacting with + Intent */}
+          <div className="mb-5 space-y-2">
+            {model.metadata?.contractName !== undefined && (
+              <div className="flex flex-col gap-0.5 sm:flex-row sm:items-start sm:gap-4">
+                <span className="w-40 flex-shrink-0 text-base font-medium text-gray-500">
+                  Interacting with
+                </span>
+                <span className="min-w-0 flex-1 text-base text-cerulean-700">
+                  {model.metadata.contractName}
                 </span>
               </div>
             )}
+
+            {model.interpolatedIntent !== undefined && (
+              <div className="flex flex-col gap-0.5 sm:flex-row sm:items-start sm:gap-4">
+                <span className="w-40 flex-shrink-0 text-base font-medium text-gray-500">
+                  Intent
+                </span>
+                <span className="min-w-0 flex-1 text-base text-cerulean-700">
+                  {model.interpolatedIntent}
+                </span>
+              </div>
+            )}
+
+            {model.intent !== undefined &&
+              model.interpolatedIntent === undefined && (
+                <div className="flex flex-col gap-0.5 sm:flex-row sm:items-start sm:gap-4">
+                  <span className="w-40 flex-shrink-0 text-base font-medium text-gray-500">
+                    Intent
+                  </span>
+                  <span className="min-w-0 flex-1 text-base text-cerulean-700">
+                    <IntentDisplay intent={model.intent} />
+                  </span>
+                </div>
+              )}
+          </div>
 
           {/* Fields */}
           {model.fields !== undefined && model.fields.length > 0 && (
