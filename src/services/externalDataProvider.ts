@@ -115,7 +115,7 @@ export function createExternalDataProvider(
       }
     },
 
-    resolveNftCollectionName: async (collectionAddress: string) => {
+    resolveNftCollectionName: async (_chainId: number, collectionAddress: string) => {
       try {
         const name = await client.readContract({
           address: collectionAddress as `0x${string}`,
