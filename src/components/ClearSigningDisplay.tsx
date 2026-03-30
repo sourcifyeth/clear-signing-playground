@@ -178,7 +178,7 @@ function RawCalldataDisplay({
             />
           </svg>
           <span className="text-sm font-medium text-amber-800">
-            Raw calldata fallback — no descriptor matched
+            Raw calldata fallback
           </span>
         </div>
       </div>
@@ -209,6 +209,13 @@ function RawCalldataDisplay({
 }
 
 export function ClearSigningDisplay({ model }: ClearSigningDisplayProps) {
+  const hasCardContent =
+    model.metadata?.contractName !== undefined ||
+    model.interpolatedIntent !== undefined ||
+    model.intent !== undefined ||
+    (model.fields !== undefined && model.fields.length > 0) ||
+    model.metadata !== undefined;
+
   return (
     <div className="space-y-4">
       {/* Warnings */}
@@ -217,62 +224,64 @@ export function ClearSigningDisplay({ model }: ClearSigningDisplayProps) {
       )}
 
       {/* Clear Transaction card */}
-      <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm sm:p-6">
-        <h3 className="mb-4 text-base font-semibold text-gray-800">
-          Clear Transaction
-        </h3>
+      {hasCardContent && (
+        <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm sm:p-6">
+          <h3 className="mb-4 text-base font-semibold text-gray-800">
+            Clear Transaction
+          </h3>
 
-        {/* Interacting with */}
-        {model.metadata?.contractName !== undefined && (
-          <p className="mb-2 text-base font-medium text-gray-500">
-            Interacting with:{" "}
-            <span className="text-cerulean-700">
-              {model.metadata.contractName}
-            </span>
-          </p>
-        )}
-
-        {/* Interpolated intent */}
-        {model.interpolatedIntent !== undefined && (
-          <p className="mb-4 text-base font-medium text-gray-500">
-            Intent:{" "}
-            <span className="text-cerulean-700">
-              {model.interpolatedIntent}
-            </span>
-          </p>
-        )}
-
-        {/* Intent (fallback when no interpolated intent) */}
-        {model.intent !== undefined &&
-          model.interpolatedIntent === undefined && (
-            <div className="mb-4 text-base font-medium text-gray-500">
-              Intent:{" "}
+          {/* Interacting with */}
+          {model.metadata?.contractName !== undefined && (
+            <p className="mb-2 text-base font-medium text-gray-500">
+              Interacting with:{" "}
               <span className="text-cerulean-700">
-                <IntentDisplay intent={model.intent} />
+                {model.metadata.contractName}
               </span>
-            </div>
+            </p>
           )}
 
-        {/* Fields */}
-        {model.fields !== undefined && model.fields.length > 0 && (
-          <dl className="space-y-0">
-            {model.fields.map((field, index) =>
-              isFieldGroup(field) ? (
-                <FieldGroupDisplay key={index} group={field} />
-              ) : (
-                <FieldRow key={index} field={field} />
-              ),
-            )}
-          </dl>
-        )}
+          {/* Interpolated intent */}
+          {model.interpolatedIntent !== undefined && (
+            <p className="mb-4 text-base font-medium text-gray-500">
+              Intent:{" "}
+              <span className="text-cerulean-700">
+                {model.interpolatedIntent}
+              </span>
+            </p>
+          )}
 
-        {/* Metadata — inside the card, collapsed by default */}
-        {model.metadata !== undefined && (
-          <div className="mt-4 border-t border-gray-100 pt-4">
-            <MetadataPopover metadata={model.metadata} />
-          </div>
-        )}
-      </div>
+          {/* Intent (fallback when no interpolated intent) */}
+          {model.intent !== undefined &&
+            model.interpolatedIntent === undefined && (
+              <div className="mb-4 text-base font-medium text-gray-500">
+                Intent:{" "}
+                <span className="text-cerulean-700">
+                  <IntentDisplay intent={model.intent} />
+                </span>
+              </div>
+            )}
+
+          {/* Fields */}
+          {model.fields !== undefined && model.fields.length > 0 && (
+            <dl className="space-y-0">
+              {model.fields.map((field, index) =>
+                isFieldGroup(field) ? (
+                  <FieldGroupDisplay key={index} group={field} />
+                ) : (
+                  <FieldRow key={index} field={field} />
+                ),
+              )}
+            </dl>
+          )}
+
+          {/* Metadata — inside the card, collapsed by default */}
+          {model.metadata !== undefined && (
+            <div className="mt-4 border-t border-gray-100 pt-4">
+              <MetadataPopover metadata={model.metadata} />
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Raw calldata fallback */}
       {model.rawCalldataFallback !== undefined && (
