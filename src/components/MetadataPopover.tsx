@@ -9,11 +9,7 @@ function hasContent(metadata: DisplayModel["metadata"]): boolean {
   if (metadata === undefined) {
     return false;
   }
-  return (
-    metadata.owner !== undefined ||
-    metadata.contractName !== undefined ||
-    metadata.info !== undefined
-  );
+  return metadata.owner !== undefined || metadata.info !== undefined;
 }
 
 export function MetadataPopover({ metadata }: MetadataPopoverProps) {
@@ -27,13 +23,13 @@ export function MetadataPopover({ metadata }: MetadataPopoverProps) {
   const meta = metadata;
 
   return (
-    <div className="rounded-lg border border-gray-200 bg-white shadow-sm">
+    <div>
       <button
         type="button"
         onClick={() => {
           setIsOpen((prev) => !prev);
         }}
-        className="flex w-full items-center justify-between px-4 py-3 text-left transition-colors hover:bg-gray-50"
+        className="flex w-full items-center justify-between py-1 text-left transition-colors hover:bg-gray-50"
         aria-expanded={isOpen}
       >
         <span className="text-sm font-medium text-gray-700">
@@ -54,16 +50,8 @@ export function MetadataPopover({ metadata }: MetadataPopoverProps) {
       </button>
 
       {isOpen && (
-        <div className="border-t border-gray-100 px-4 py-3">
+        <div className="pt-2">
           <dl className="space-y-2 text-sm">
-            {meta.contractName !== undefined && (
-              <div className="flex justify-between gap-4">
-                <dt className="text-gray-500">Contract Name</dt>
-                <dd className="font-medium text-gray-900">
-                  {meta.contractName}
-                </dd>
-              </div>
-            )}
             {meta.owner !== undefined && (
               <div className="flex justify-between gap-4">
                 <dt className="text-gray-500">Owner</dt>

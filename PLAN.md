@@ -5,6 +5,7 @@
 **Goal**: Set up Vite + React + TypeScript project with all tooling and dependencies.
 
 **Creates**:
+
 - `package.json` — Vite React TS project with deps: `@sourcifyeth/clear-signing` (git dep: `github:sourcifyeth/clear-signing`), `viem`, `react`, `react-dom`, Tailwind CSS v4, ESLint (copied from clear-signing lib), Prettier, IBM Plex fonts
 - `tsconfig.json`, `tsconfig.app.json`, `tsconfig.node.json` — Strict TypeScript inspired by the library's config
 - `vite.config.ts` — Vite React plugin
@@ -27,6 +28,7 @@
 **Goal**: Pre-build script to generate the ERC-7730 registry index using `createGitHubRegistryIndex()` with dev caching.
 
 **Creates**:
+
 - `scripts/build-index.ts` — Calls `createGitHubRegistryIndex()`, writes JSON to `src/generated/registry-index.json`, caches with timestamp (skips rebuild if <1 week old in dev)
 - `src/generated/.gitkeep` — Keep directory tracked
 - `package.json` updates — Add `build:index` script, integrate into `prebuild`
@@ -44,11 +46,13 @@
 **Goal**: Implement blockchain interaction layer and data providers.
 
 ### 3A — Viem Client & Chain Config
+
 - `src/config/chains.ts` — Chain type definition, fetch chains from `chainid.network/chains.json`, extract RPC for chain ID 1, architecture extensible for multi-chain
 - `src/services/viemClient.ts` — Create viem `PublicClient` for Ethereum mainnet using RPC from chains list, with fallback. Extensible for user-provided RPCs later.
 - `src/hooks/useChains.ts` — React hook to load chains with loading state
 
 ### 3B — ExternalDataProvider
+
 - `src/services/externalDataProvider.ts` — Implements `ExternalDataProvider` interface:
   - `resolveEnsName`: viem `getEnsName()` for reverse resolution
   - `resolveToken`: viem multicall for ERC-20 `name()`, `symbol()`, `decimals()`
@@ -56,6 +60,7 @@
   - `resolveLocalName`: not implemented
 
 ### 3C — Transaction Service & Example Data
+
 - `src/services/transactionService.ts` — Fetch tx by hash via viem, transform to library's `Transaction` type
 - `src/data/exampleTransactions.ts` — 4-6 real mainnet tx hashes for contracts in the registry. Find mainnet contract addresses from the `context` field in descriptor files at `LedgerHQ/clear-signing-erc7730-registry`, then find real transaction hashes from Etherscan for those contracts (Uniswap V3, Lido stETH, Aave V3, WETH, 1inch, etc.)
 
@@ -70,6 +75,7 @@
 **Goal**: Build all React components with Sourcify-inspired styling, mobile-first.
 
 **Components**:
+
 - `src/components/Header.tsx` — App name, "Ethereum Mainnet" badge, links to GitHub repo (https://github.com/sourcifyeth/clear-signing-playground) + https://sourcify.dev/, responsive
 - `src/components/TransactionInput.tsx` — Hash input + submit button, remains visible when results shown
 - `src/components/ExampleTransactions.tsx` — Selectable example tx chips/cards, clicking fills input and auto-submits
@@ -91,6 +97,7 @@
 **Goal**: Wire everything together, add animations, finalize README.
 
 **Modifies**:
+
 - `src/App.tsx` — Main orchestration: state management (tx hash, raw tx, DisplayModel, loading, active view), flow (input → fetch raw → show raw → delay → animate to clear signing), error handling, website loading state (chains.json fetch)
 - `src/app.css` — Animation keyframes for view toggle transition
 - `README.md` — Project description, setup/dev instructions, TODO for proxy resolution implementation
@@ -112,44 +119,63 @@
 ## Library API Reference
 
 ### Main Functions
+
 - `format(transaction, externalDataProvider?, options?)` → `Promise<DisplayModel>`
 - `formatTypedData(typedData, domain, externalDataProvider?, options?)` → `Promise<DisplayModel>`
 - `createGitHubRegistryIndex(githubSource?)` → `Promise<RegistryIndex>`
 
 ### Transaction Type
+
 ```typescript
 interface Transaction {
-  chainId: number
-  from?: string
-  to?: string
-  value?: string | number
-  data?: string
+  chainId: number;
+  from?: string;
+  to?: string;
+  value?: string | number;
+  data?: string;
 }
 ```
 
 ### DisplayModel Type
+
 ```typescript
 interface DisplayModel {
-  intent: string | Record<string, string>
-  fields: DisplayField[]
-  interpolatedIntent?: string
-  metadata: { owner?: string; contractName?: string; deployed?: { blockNumber: number } }
-  rawCalldataFallback?: boolean
-  warnings: Warning[]
+  intent: string | Record<string, string>;
+  fields: DisplayField[];
+  interpolatedIntent?: string;
+  metadata: {
+    owner?: string;
+    contractName?: string;
+    deployed?: { blockNumber: number };
+  };
+  rawCalldataFallback?: boolean;
+  warnings: Warning[];
 }
 ```
 
 ### ExternalDataProvider Interface
+
 ```typescript
 interface ExternalDataProvider {
-  resolveLocalName?(address: string, options?: { expectedType?: "external" | "contract" }): Promise<string | undefined>
-  resolveEnsName?(address: string, options?: { expectedType?: "external" | "contract" }): Promise<string | undefined>
-  resolveToken?(tokenAddress: string): Promise<{ name: string; symbol: string; decimals: number } | undefined>
-  resolveNftCollectionName?(contractAddress: string): Promise<string | undefined>
+  resolveLocalName?(
+    address: string,
+    options?: { expectedType?: "external" | "contract" },
+  ): Promise<string | undefined>;
+  resolveEnsName?(
+    address: string,
+    options?: { expectedType?: "external" | "contract" },
+  ): Promise<string | undefined>;
+  resolveToken?(
+    tokenAddress: string,
+  ): Promise<{ name: string; symbol: string; decimals: number } | undefined>;
+  resolveNftCollectionName?(
+    contractAddress: string,
+  ): Promise<string | undefined>;
 }
 ```
 
 ### FormatOptions (descriptorResolverOptions)
+
 ```typescript
 // GitHub resolver (default)
 { type: "github"; index?: RegistryIndex; githubSource?: GitHubSource }

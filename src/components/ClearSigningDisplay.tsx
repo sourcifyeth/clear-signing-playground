@@ -140,7 +140,7 @@ function IntentDisplay({
   intent: string | Record<string, string>;
 }) {
   if (typeof intent === "string") {
-    return <h3 className="text-base font-semibold text-gray-800">{intent}</h3>;
+    return <span>{intent}</span>;
   }
 
   const entries = Object.entries(intent);
@@ -216,30 +216,45 @@ export function ClearSigningDisplay({ model }: ClearSigningDisplayProps) {
         <WarningBanner warnings={model.warnings} />
       )}
 
-      {/* Metadata */}
-      {model.metadata !== undefined && (
-        <MetadataPopover metadata={model.metadata} />
-      )}
+      {/* Clear Transaction card */}
+      <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm sm:p-6">
+        <h3 className="mb-4 text-base font-semibold text-gray-800">
+          Clear Transaction
+        </h3>
 
-      {/* Interpolated intent — primary display */}
-      {model.interpolatedIntent !== undefined && (
-        <div className="rounded-lg border border-cerulean-200 bg-cerulean-50 px-4 py-3">
-          <p className="text-sm font-medium text-cerulean-800">
-            {model.interpolatedIntent}
+        {/* Interacting with */}
+        {model.metadata?.contractName !== undefined && (
+          <p className="mb-2 text-base font-medium text-gray-500">
+            Interacting with:{" "}
+            <span className="text-cerulean-700">
+              {model.metadata.contractName}
+            </span>
           </p>
-        </div>
-      )}
+        )}
 
-      {/* Intent */}
-      {model.intent !== undefined && (
-        <div className="px-1">
-          <IntentDisplay intent={model.intent} />
-        </div>
-      )}
+        {/* Interpolated intent */}
+        {model.interpolatedIntent !== undefined && (
+          <p className="mb-4 text-base font-medium text-gray-500">
+            Intent:{" "}
+            <span className="text-cerulean-700">
+              {model.interpolatedIntent}
+            </span>
+          </p>
+        )}
 
-      {/* Fields */}
-      {model.fields !== undefined && model.fields.length > 0 && (
-        <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm sm:p-6">
+        {/* Intent (fallback when no interpolated intent) */}
+        {model.intent !== undefined &&
+          model.interpolatedIntent === undefined && (
+            <div className="mb-4 text-base font-medium text-gray-500">
+              Intent:{" "}
+              <span className="text-cerulean-700">
+                <IntentDisplay intent={model.intent} />
+              </span>
+            </div>
+          )}
+
+        {/* Fields */}
+        {model.fields !== undefined && model.fields.length > 0 && (
           <dl className="space-y-0">
             {model.fields.map((field, index) =>
               isFieldGroup(field) ? (
@@ -249,8 +264,15 @@ export function ClearSigningDisplay({ model }: ClearSigningDisplayProps) {
               ),
             )}
           </dl>
-        </div>
-      )}
+        )}
+
+        {/* Metadata — inside the card, collapsed by default */}
+        {model.metadata !== undefined && (
+          <div className="mt-4 border-t border-gray-100 pt-4">
+            <MetadataPopover metadata={model.metadata} />
+          </div>
+        )}
+      </div>
 
       {/* Raw calldata fallback */}
       {model.rawCalldataFallback !== undefined && (

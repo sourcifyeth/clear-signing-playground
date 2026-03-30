@@ -37,7 +37,6 @@ function App() {
   const [error, setError] = useState<string | null>(null);
 
   const cancelledRef = useRef(false);
-  const formatTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Create viem client once chains are loaded
   const client: PublicClient | null = useMemo(() => {
@@ -52,9 +51,6 @@ function App() {
   useEffect(() => {
     return () => {
       cancelledRef.current = true;
-      if (formatTimeoutRef.current !== null) {
-        clearTimeout(formatTimeoutRef.current);
-      }
     };
   }, []);
 
@@ -70,10 +66,6 @@ function App() {
 
     // Cancel any previous in-flight operations
     cancelledRef.current = true;
-    if (formatTimeoutRef.current !== null) {
-      clearTimeout(formatTimeoutRef.current);
-      formatTimeoutRef.current = null;
-    }
 
     // Reset cancellation for this new request
     cancelledRef.current = false;
@@ -98,47 +90,37 @@ function App() {
 
         setRawTransaction(raw);
         setLoadingTx(false);
-        setActiveView("raw");
 
-        // Start formatting after a short delay
-        formatTimeoutRef.current = setTimeout(() => {
+        // Start formatting immediately
+        setLoadingFormat(true);
+
+        try {
+          const libraryTx = rawToLibraryTransaction(raw, DEFAULT_CHAIN_ID);
+          const model = await format(libraryTx, {
+            externalDataProvider: createExternalDataProvider(currentClient),
+            descriptorResolverOptions: {
+              type: "github",
+              index: registryIndex,
+            },
+          });
+
+          // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- ref is mutated externally
           if (cancelledRef.current) {
             return;
           }
 
-          setLoadingFormat(true);
-
-          void (async () => {
-            try {
-              const libraryTx = rawToLibraryTransaction(raw, DEFAULT_CHAIN_ID);
-              const model = await format(libraryTx, {
-                externalDataProvider: createExternalDataProvider(currentClient),
-                descriptorResolverOptions: {
-                  type: "github",
-                  index: registryIndex,
-                },
-              });
-
-              if (cancelledRef.current) {
-                return;
-              }
-
-              setDisplayModel(model);
-              setLoadingFormat(false);
-              setActiveView("clear");
-            } catch (err) {
-              if (cancelledRef.current) {
-                return;
-              }
-              setError(
-                err instanceof Error
-                  ? err.message
-                  : "Failed to format transaction",
-              );
-              setLoadingFormat(false);
-            }
-          })();
-        }, 400);
+          setDisplayModel(model);
+          setLoadingFormat(false);
+        } catch (err) {
+          // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- ref is mutated externally
+          if (cancelledRef.current) {
+            return;
+          }
+          setError(
+            err instanceof Error ? err.message : "Failed to format transaction",
+          );
+          setLoadingFormat(false);
+        }
       } catch (err) {
         if (cancelledRef.current) {
           return;
@@ -163,10 +145,6 @@ function App() {
 
       // Cancel any previous in-flight operations
       cancelledRef.current = true;
-      if (formatTimeoutRef.current !== null) {
-        clearTimeout(formatTimeoutRef.current);
-        formatTimeoutRef.current = null;
-      }
 
       cancelledRef.current = false;
 
@@ -189,50 +167,39 @@ function App() {
 
           setRawTransaction(raw);
           setLoadingTx(false);
-          setActiveView("raw");
 
-          formatTimeoutRef.current = setTimeout(() => {
+          // Start formatting immediately
+          setLoadingFormat(true);
+
+          try {
+            const libraryTx = rawToLibraryTransaction(raw, DEFAULT_CHAIN_ID);
+            const model = await format(libraryTx, {
+              externalDataProvider: createExternalDataProvider(currentClient),
+              descriptorResolverOptions: {
+                type: "github",
+                index: registryIndex,
+              },
+            });
+
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- ref is mutated externally
             if (cancelledRef.current) {
               return;
             }
 
-            setLoadingFormat(true);
-
-            void (async () => {
-              try {
-                const libraryTx = rawToLibraryTransaction(
-                  raw,
-                  DEFAULT_CHAIN_ID,
-                );
-                const model = await format(libraryTx, {
-                  externalDataProvider:
-                    createExternalDataProvider(currentClient),
-                  descriptorResolverOptions: {
-                    type: "github",
-                    index: registryIndex,
-                  },
-                });
-
-                if (cancelledRef.current) {
-                  return;
-                }
-
-                setDisplayModel(model);
-                setLoadingFormat(false);
-                setActiveView("clear");
-              } catch (err) {
-                if (cancelledRef.current) {
-                  return;
-                }
-                setError(
-                  err instanceof Error
-                    ? err.message
-                    : "Failed to format transaction",
-                );
-                setLoadingFormat(false);
-              }
-            })();
-          }, 400);
+            setDisplayModel(model);
+            setLoadingFormat(false);
+          } catch (err) {
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- ref is mutated externally
+            if (cancelledRef.current) {
+              return;
+            }
+            setError(
+              err instanceof Error
+                ? err.message
+                : "Failed to format transaction",
+            );
+            setLoadingFormat(false);
+          }
         } catch (err) {
           if (cancelledRef.current) {
             return;
@@ -260,7 +227,7 @@ function App() {
     return (
       <div className="min-h-screen bg-gray-50">
         <Header />
-        <main className="mx-auto max-w-5xl px-4 py-6 sm:px-6">
+        <main className="mx-auto max-w-7xl px-4 py-6 sm:px-6">
           <LoadingSpinner message="Loading chain configuration..." />
         </main>
       </div>
@@ -272,7 +239,7 @@ function App() {
     return (
       <div className="min-h-screen bg-gray-50">
         <Header />
-        <main className="mx-auto max-w-5xl px-4 py-6 sm:px-6">
+        <main className="mx-auto max-w-7xl px-4 py-6 sm:px-6">
           <div className="rounded-lg border border-red-300 bg-red-50 px-4 py-3">
             <p className="text-sm font-medium text-red-800">
               Failed to load chain configuration: {chainsError}
@@ -286,7 +253,7 @@ function App() {
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
-      <main className="mx-auto max-w-5xl px-4 py-6 sm:px-6">
+      <main className="mx-auto max-w-7xl px-4 py-6 sm:px-6">
         <div className="space-y-6">
           <TransactionInput
             value={txHash}
@@ -331,24 +298,37 @@ function App() {
             <div className="space-y-4">
               <ViewToggle activeView={activeView} onToggle={handleViewToggle} />
 
-              {loadingFormat && activeView === "clear" && (
-                <LoadingSpinner message="Formatting..." />
-              )}
-
-              <div className="view-transition-container">
+              {/* Small screens: tabbed view */}
+              <div className="lg:hidden">
                 {activeView === "raw" ? (
-                  <div key="raw" className="view-panel">
-                    <RawTransactionView transaction={rawTransaction} />
-                  </div>
+                  <RawTransactionView transaction={rawTransaction} />
+                ) : loadingFormat ? (
+                  <LoadingSpinner message="Formatting..." />
                 ) : displayModel !== null ? (
-                  <div key="clear" className="view-panel">
-                    <ClearSigningDisplay model={displayModel} />
-                  </div>
-                ) : !loadingFormat ? (
+                  <ClearSigningDisplay model={displayModel} />
+                ) : (
                   <div className="rounded-lg border border-gray-200 bg-white px-4 py-8 text-center text-sm text-gray-500">
                     Clear signing data not yet available.
                   </div>
-                ) : null}
+                )}
+              </div>
+
+              {/* Large screens: side-by-side */}
+              <div className="hidden lg:grid lg:grid-cols-2 lg:gap-6">
+                <div>
+                  <RawTransactionView transaction={rawTransaction} />
+                </div>
+                <div>
+                  {loadingFormat ? (
+                    <LoadingSpinner message="Formatting..." />
+                  ) : displayModel !== null ? (
+                    <ClearSigningDisplay model={displayModel} />
+                  ) : (
+                    <div className="rounded-lg border border-gray-200 bg-white px-4 py-8 text-center text-sm text-gray-500">
+                      Clear signing data not yet available.
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           )}

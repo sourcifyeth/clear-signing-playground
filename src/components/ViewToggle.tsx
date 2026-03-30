@@ -5,7 +5,7 @@ interface ViewToggleProps {
 
 export function ViewToggle({ activeView, onToggle }: ViewToggleProps) {
   return (
-    <div className="inline-flex rounded-lg border border-gray-200 bg-gray-100 p-0.5">
+    <div className="inline-flex rounded-lg border border-gray-200 bg-gray-100 p-0.5 lg:hidden">
       <button
         type="button"
         onClick={() => {
@@ -30,7 +30,7 @@ export function ViewToggle({ activeView, onToggle }: ViewToggleProps) {
             : "text-gray-600 hover:text-gray-900"
         }`}
       >
-        Clear Signing
+        Clear
       </button>
     </div>
   );
