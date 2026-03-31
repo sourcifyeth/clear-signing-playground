@@ -248,11 +248,37 @@ function App() {
     );
   }
 
+  const hasActivity = loadingTx || error !== null || rawTransaction !== null;
+
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="flex min-h-screen flex-col bg-gray-50">
       <Header />
-      <main className="mx-auto max-w-7xl px-4 py-6 sm:px-6">
-        <div className="space-y-6">
+      <main
+        className={`mx-auto w-full max-w-7xl px-4 sm:px-6 ${
+          hasActivity
+            ? "py-6"
+            : "flex flex-1 flex-col items-center py-6 sm:justify-center sm:pb-24 sm:py-0"
+        }`}
+      >
+        <div
+          className={hasActivity ? "space-y-6" : "w-full max-w-2xl space-y-6"}
+        >
+          {!hasActivity && (
+            <p className="text-center text-lg text-gray-500">
+              Select an onchain transaction to decode into a human-readable
+              format using the{" "}
+              <a
+                href="https://eips.ethereum.org/EIPS/eip-7730"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-cerulean-600 underline hover:text-cerulean-800"
+              >
+                ERC-7730 Clear Signing
+              </a>{" "}
+              standard
+            </p>
+          )}
+
           <TransactionInput
             value={txHash}
             onChange={handleTxHashChange}

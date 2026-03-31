@@ -26,7 +26,7 @@ export function ExampleTransactions({
               onClick={() => {
                 onSelect(example.txHash);
               }}
-              className={`flex-shrink-0 rounded-lg border px-3 py-2 text-left transition-all ${
+              className={`flex-shrink-0 cursor-pointer rounded-lg border px-3 py-2 text-left transition-all ${
                 isSelected
                   ? "border-cerulean-500 bg-cerulean-50 text-cerulean-700 ring-1 ring-cerulean-500"
                   : "border-gray-200 bg-white text-gray-700 hover:border-cerulean-300 hover:bg-cerulean-50/50"
