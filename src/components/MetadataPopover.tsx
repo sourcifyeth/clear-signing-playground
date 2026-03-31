@@ -33,7 +33,7 @@ export function MetadataPopover({ metadata }: MetadataPopoverProps) {
         aria-expanded={isOpen}
       >
         <span className="text-sm font-medium text-gray-700">
-          Contract Metadata
+          Contract Information
         </span>
         <svg
           className={`h-4 w-4 text-gray-400 transition-transform ${isOpen ? "rotate-180" : ""}`}
