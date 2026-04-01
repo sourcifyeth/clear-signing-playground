@@ -65,11 +65,13 @@ function FieldValue({ field }: { field: DisplayField }) {
           </span>
           {field.rawAddress !== undefined &&
             field.rawAddress !== field.value && (
-              <span
-                className="mt-0.5 font-mono text-xs text-gray-400"
-                title={field.rawAddress}
-              >
-                {truncateAddress(field.rawAddress)}
+              <span className="group/addr relative mt-0.5 inline-block cursor-default">
+                <span className="font-mono text-xs text-gray-400">
+                  {truncateAddress(field.rawAddress)}
+                </span>
+                <span className="pointer-events-none absolute bottom-full left-0 z-10 mb-1 hidden whitespace-nowrap rounded bg-gray-800 px-2 py-1 font-mono text-xs text-white shadow-lg group-hover/addr:block">
+                  {field.rawAddress}
+                </span>
               </span>
             )}
         </div>
