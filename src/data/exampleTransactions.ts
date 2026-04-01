@@ -29,7 +29,7 @@ export const exampleTransactions: ExampleTransaction[] = [
     name: "Aave V3 Supply",
     description: "Supply assets to the Aave V3 lending pool",
     txHash:
-      "0x161eb2ae91cc0dafe91e723b7147fa7c3b4b74f1437b3c9c3df8075cf4c31986",
+      "0xb0bd1c520f3b43405bb23f94f2a7f18e0fd0b671dc606516f3d0f9c9a199b608",
     contractName: "Aave Pool V3",
   },
   {
@@ -43,14 +43,14 @@ export const exampleTransactions: ExampleTransaction[] = [
     name: "1inch Swap",
     description: "Token swap via 1inch Aggregation Router V6",
     txHash:
-      "0x5b7436fc0e9a0e53428d340742bbb7b794036dae25a0be7f909a30756121bb16",
+      "0xc8b5160898209df85207b18194b1e3a672b8e6c59548a434fa2de798b3a686f2",
     contractName: "AggregationRouterV6",
   },
   {
     name: "Aave V3 Borrow",
     description: "Borrow assets from the Aave V3 lending pool",
     txHash:
-      "0x6a616c9af331e404c41924973a49ad0acffbc986bd4cfff8f6d15cae40f36726",
+      "0x78117e5a10483522f88edc342f9482b6c33da2f60afb27d4329a128acd6f5c6c",
     contractName: "Aave Pool V3",
   },
 ];
