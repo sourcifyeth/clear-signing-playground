@@ -96,7 +96,9 @@ function FieldRow({ field }: { field: DisplayField }) {
       <dd className="min-w-0 flex-1 break-all text-gray-900">
         <FieldValue field={field} />
         {field.warning !== undefined && (
-          <FieldWarning warning={field.warning} />
+          <div>
+            <FieldWarning warning={field.warning} />
+          </div>
         )}
       </dd>
     </div>
