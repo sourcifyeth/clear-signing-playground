@@ -50,7 +50,11 @@ export function createExternalDataProvider(
               address: address as `0x${string}`,
             });
             const isContract =
-              code !== undefined && code !== "0x" && code !== "0x0";
+              code !== undefined &&
+              code !== "0x" &&
+              code !== "0x0" &&
+              // EIP-7702 delegation designator prefix
+              !code.startsWith("0xef0100");
 
             if (CONTRACT_TYPES.has(type)) {
               typeMatch = isContract;
