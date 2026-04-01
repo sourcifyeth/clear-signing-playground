@@ -15,7 +15,7 @@ export const exampleTransactions: ExampleTransaction[] = [
     name: "Uniswap V3 Swap",
     description: "Token swap on the Uniswap V3 SwapRouter02",
     txHash:
-      "0x05c2c10410696f9a808d0059aa11cfd9616309117c3e294cfed2dd1ac8729874",
+      "0x675a2e96e48b77e5d8edc16bfc4dc2ea7547f950edb76fdeff40e8af250d897e",
     contractName: "UniswapV3Router02",
   },
   {
