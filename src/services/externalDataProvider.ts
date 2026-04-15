@@ -1,5 +1,6 @@
 import type { PublicClient } from "viem";
 import type { ExternalDataProvider } from "@sourcifyeth/clear-signing";
+import chainInfo from "../generated/chain-info.json";
 
 const erc20Abi = [
   {
@@ -134,6 +135,23 @@ export function createExternalDataProvider(
       } catch {
         return null;
       }
+    },
+
+    resolveBlockTimestamp: async (_chainId: number, blockHeight: bigint) => {
+      try {
+        const block = await client.getBlock({ blockNumber: blockHeight });
+        return { timestamp: Number(block.timestamp) };
+      } catch {
+        return null;
+      }
+    },
+
+    resolveChainInfo: (chainId: number) => {
+      const entry = chainInfo[String(chainId)];
+      if (!entry) {
+        return Promise.resolve(null);
+      }
+      return Promise.resolve(entry);
     },
   };
 }

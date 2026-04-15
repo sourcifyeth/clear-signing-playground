@@ -5,17 +5,24 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "npm run build:index && tsc -b && vite build",
+    "build": "npm run build:index && npm run build:chain-info && tsc -b && vite build",
     "build:index": "tsx scripts/build-index.ts",
     "build:index:force": "tsx scripts/build-index.ts --force",
-    "lint": "eslint .",
-    "preview": "vite preview",
-    "format": "prettier --write ."
+    "build:chain-info": "tsx scripts/build-chain-info.ts",
+    "build:chain-info:force": "tsx scripts/build-chain-info.ts --force",
+    "fix": "npm run fix:prettier && npm run fix:eslint",
+    "fix:prettier": "prettier \"**/*.{ts,tsx,js,md,json}\" --write",
+    "fix:eslint": "eslint \"src/**/*.{ts,tsx}\" \"scripts/**/*.ts\" --fix",
+    "check": "npm run check:types && npm run check:prettier && npm run check:eslint",
+    "check:types": "tsc -b",
+    "check:prettier": "prettier \"**/*.{ts,tsx,js,md,json}\" --check",
+    "check:eslint": "eslint \"src/**/*.{ts,tsx}\" \"scripts/**/*.ts\"",
+    "preview": "vite preview"
   },
   "dependencies": {
     "@fontsource-variable/ibm-plex-sans": "^5.0.0",
     "@fontsource/ibm-plex-mono": "^5.0.0",
-    "@sourcifyeth/clear-signing": "git+https://github.com/sourcifyeth/clear-signing.git#bf21f81e7ea23bb50bd3e234050714f2aa47473a",
+    "@sourcifyeth/clear-signing": "git+https://github.com/sourcifyeth/clear-signing.git#874c68a90c6b596483951b4efffbf097175ef3e5",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "viem": "^2.0.0"
