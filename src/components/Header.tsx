@@ -3,9 +3,12 @@ export function Header() {
     <header className="bg-cerulean-500 text-white">
       <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3 sm:px-6">
         <div className="flex items-center gap-3">
-          <h1 className="text-lg font-semibold tracking-tight sm:text-xl">
+          <a
+            href="/"
+            className="text-lg font-semibold tracking-tight text-white no-underline sm:text-xl"
+          >
             Clear Signing Playground
-          </h1>
+          </a>
           <span className="hidden items-center gap-1.5 rounded-full bg-cerulean-600 px-2.5 py-0.5 text-xs font-medium sm:inline-flex">
             <span className="inline-block h-1.5 w-1.5 rounded-full bg-green-400" />
             Ethereum Mainnet
