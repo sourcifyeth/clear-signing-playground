@@ -16,7 +16,7 @@ void (async () => {
       const cachedAt = existing._cachedAt;
       if (cachedAt && Date.now() - cachedAt < CACHE_MAX_AGE_MS) {
         console.log(
-          "Registry index is cached (less than 1 week old). Skipping rebuild. Use --force to rebuild.",
+          "Registry index is cached (less than 1 week old). Skipping rebuild. Use `npm run build:index:force` to rebuild.",
         );
         process.exit(0);
       }
