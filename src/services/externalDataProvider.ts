@@ -1,5 +1,8 @@
 import type { PublicClient } from "viem";
-import type { ExternalDataProvider } from "@sourcifyeth/clear-signing";
+import type {
+  DescriptorAddressType,
+  ExternalDataProvider,
+} from "@sourcifyeth/clear-signing";
 import chainInfo from "../generated/chain-info.json";
 
 const erc20Abi = [
@@ -26,14 +29,21 @@ const erc20Abi = [
   },
 ] as const;
 
-const CONTRACT_TYPES = new Set(["contract", "token", "collection"]);
-const EOA_TYPES = new Set(["eoa", "wallet"]);
+const CONTRACT_TYPES = new Set<DescriptorAddressType>([
+  "contract",
+  "token",
+  "collection",
+]);
+const EOA_TYPES = new Set<DescriptorAddressType>(["eoa", "wallet"]);
 
 export function createExternalDataProvider(
   client: PublicClient,
 ): ExternalDataProvider {
   return {
-    resolveEnsName: async (address: string, type: string) => {
+    resolveEnsName: async (
+      address: string,
+      acceptedTypes?: DescriptorAddressType[],
+    ) => {
       try {
         const ensName = await client.getEnsName({
           address: address as `0x${string}`,
@@ -45,7 +55,12 @@ export function createExternalDataProvider(
 
         let typeMatch = true;
 
-        if (CONTRACT_TYPES.has(type) || EOA_TYPES.has(type)) {
+        const needsContractCheck =
+          acceptedTypes?.some(
+            (t) => CONTRACT_TYPES.has(t) || EOA_TYPES.has(t),
+          ) ?? false;
+
+        if (needsContractCheck) {
           try {
             const code = await client.getCode({
               address: address as `0x${string}`,
@@ -57,13 +72,17 @@ export function createExternalDataProvider(
               // EIP-7702 delegation designator prefix
               !code.startsWith("0xef0100");
 
-            if (CONTRACT_TYPES.has(type)) {
+            const wantsContract = acceptedTypes?.some((t) =>
+              CONTRACT_TYPES.has(t),
+            );
+            const wantsEoa = acceptedTypes?.some((t) => EOA_TYPES.has(t));
+
+            if (wantsContract && !wantsEoa) {
               typeMatch = isContract;
-            } else if (EOA_TYPES.has(type)) {
+            } else if (wantsEoa && !wantsContract) {
               typeMatch = !isContract;
             }
           } catch {
-            // If we can't check code, default to true
             typeMatch = true;
           }
         }
