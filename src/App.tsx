@@ -16,6 +16,7 @@ import { exampleTransactions } from "./data/exampleTransactions";
 import registryIndex from "./generated/registry-index.json";
 
 import { Header } from "./components/Header";
+import { Footer } from "./components/Footer";
 import { TransactionInput } from "./components/TransactionInput";
 import { ExampleTransactions } from "./components/ExampleTransactions";
 import { RawTransactionView } from "./components/RawTransactionView";
@@ -232,7 +233,7 @@ function App() {
   // Chains error
   if (chainsError !== null) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="flex min-h-screen flex-col bg-gray-50">
         <Header />
         <main className="mx-auto max-w-7xl px-4 py-6 sm:px-6">
           <div className="rounded-lg border border-red-300 bg-red-50 px-4 py-3">
@@ -241,6 +242,7 @@ function App() {
             </p>
           </div>
         </main>
+        <Footer />
       </div>
     );
   }
@@ -251,10 +253,10 @@ function App() {
     <div className="flex min-h-screen flex-col bg-gray-50">
       <Header />
       <main
-        className={`mx-auto w-full max-w-7xl px-4 sm:px-6 ${
+        className={`mx-auto w-full max-w-7xl flex-1 px-4 sm:px-6 ${
           hasActivity
             ? "py-6"
-            : "flex flex-1 flex-col items-center py-6 sm:justify-center sm:pb-24 sm:py-0"
+            : "flex flex-col items-center py-6 sm:justify-center sm:pb-24 sm:py-0"
         }`}
       >
         <div
@@ -355,6 +357,7 @@ function App() {
           )}
         </div>
       </main>
+      <Footer />
     </div>
   );
 }
