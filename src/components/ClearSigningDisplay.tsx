@@ -3,6 +3,7 @@ import type {
   DisplayModel,
   DisplayField,
   DisplayFieldGroup,
+  EmbeddedCalldata,
   Warning,
 } from "@sourcifyeth/clear-signing";
 import { isFieldGroup } from "@sourcifyeth/clear-signing";
@@ -87,8 +88,18 @@ function FieldValue({ field }: { field: DisplayField }) {
   }
 }
 
-function EmbeddedCallChip({ model }: { model: DisplayModel }) {
+function EmbeddedCallChip({
+  embedded,
+  rawValue,
+}: {
+  embedded: EmbeddedCalldata;
+  rawValue: string;
+}) {
   const [open, setOpen] = useState(false);
+  const [calldataExpanded, setCalldataExpanded] = useState(false);
+  const model: DisplayModel = embedded.display;
+  const callee: string | undefined = embedded.callee;
+  const chainId: number | undefined = embedded.chainId;
 
   const contractName = model.metadata?.contractName;
   const intentStr = typeof model.intent === "string" ? model.intent : undefined;
@@ -100,11 +111,51 @@ function EmbeddedCallChip({ model }: { model: DisplayModel }) {
     summary = [contractName, intentStr].filter(Boolean).join(": ");
   }
 
+  const showFallback = summary === undefined;
+  const hasRawCalldataFallback = model.rawCalldataFallback !== undefined;
+  const calldataPreview = rawValue.slice(0, 40);
+  const calldataTruncated = rawValue.length > 40;
+
   return (
     <>
       <div className="flex flex-col gap-2">
         {summary !== undefined && (
           <span className="text-sm text-gray-700">{summary}</span>
+        )}
+        {showFallback && (
+          <dl className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 text-sm">
+            {callee !== undefined && (
+              <>
+                <dt className="shrink-0 text-gray-500">Target</dt>
+                <dd className="min-w-0 font-mono break-all">{callee}</dd>
+              </>
+            )}
+            {chainId !== undefined && (
+              <>
+                <dt className="shrink-0 text-gray-500">Chain ID</dt>
+                <dd>{chainId}</dd>
+              </>
+            )}
+            {!hasRawCalldataFallback && (
+              <>
+                <dt className="shrink-0 text-gray-500">Calldata</dt>
+                <dd className="min-w-0 font-mono break-all">
+                  {calldataExpanded ? rawValue : calldataPreview}
+                  {calldataTruncated && !calldataExpanded && "…"}
+                  {calldataTruncated && (
+                    <button
+                      onClick={() => {
+                        setCalldataExpanded((v) => !v);
+                      }}
+                      className="ml-1 text-cerulean-600 hover:underline"
+                    >
+                      {calldataExpanded ? "show less" : "show more"}
+                    </button>
+                  )}
+                </dd>
+              </>
+            )}
+          </dl>
         )}
         <div className="flex items-center gap-3">
           <span className="inline-flex items-center rounded-full bg-cerulean-50 px-2 py-0.5 text-xs font-medium text-cerulean-700 ring-1 ring-inset ring-cerulean-200">
@@ -170,8 +221,11 @@ function FieldRow({ field }: { field: DisplayField }) {
         {field.label}
       </dt>
       <dd className="min-w-0 flex-1 break-all text-gray-900">
-        {field.calldataDisplay !== undefined ? (
-          <EmbeddedCallChip model={field.calldataDisplay} />
+        {field.embeddedCalldata !== undefined ? (
+          <EmbeddedCallChip
+            embedded={field.embeddedCalldata}
+            rawValue={field.value}
+          />
         ) : (
           <FieldValue field={field} />
         )}
