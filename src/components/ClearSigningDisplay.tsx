@@ -47,15 +47,6 @@ function FieldWarning({ warning }: { warning: Warning }) {
 }
 
 function FieldValue({ field }: { field: DisplayField }) {
-  // Handle nested DisplayModel
-  if (typeof field.value !== "string") {
-    return (
-      <div className="mt-2 rounded-md border border-gray-200 bg-gray-50 p-3">
-        <ClearSigningDisplay model={field.value} />
-      </div>
-    );
-  }
-
   switch (field.fieldType) {
     case "address":
       return (
@@ -95,6 +86,11 @@ function FieldRow({ field }: { field: DisplayField }) {
       </dt>
       <dd className="min-w-0 flex-1 break-all text-gray-900">
         <FieldValue field={field} />
+        {field.calldataDisplay !== undefined && (
+          <div className="mt-2 rounded-md border border-gray-200 bg-gray-50 p-3">
+            <ClearSigningDisplay model={field.calldataDisplay} />
+          </div>
+        )}
         {field.warning !== undefined && (
           <div>
             <FieldWarning warning={field.warning} />

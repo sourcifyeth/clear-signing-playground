@@ -42,7 +42,7 @@ The tsconfig is very strict. Watch out for:
 
 ### Registry index (build-time)
 
-`scripts/build-index.ts` calls `createGitHubRegistryIndex()` from the library to fetch ERC-7730 descriptor metadata from the LedgerHQ registry on GitHub. Output goes to `src/generated/registry-index.json` (gitignored). Cached for 1 week in dev; use `--force` to rebuild.
+`scripts/build-index.ts` calls `createGitHubRegistryIndex()` from the library to fetch ERC-7730 descriptor metadata from the ethereum/clear-signing-erc7730-registry on GitHub. Output goes to `src/generated/registry-index.json` (gitignored). Cached for 1 week in dev; use `--force` to rebuild.
 
 ### Chain configuration
 
