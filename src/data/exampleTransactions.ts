@@ -53,4 +53,11 @@ export const exampleTransactions: ExampleTransaction[] = [
       "0x78117e5a10483522f88edc342f9482b6c33da2f60afb27d4329a128acd6f5c6c",
     contractName: "Aave Pool V3",
   },
+  {
+    name: "Safe Factory",
+    description: "Deploy a new Safe multisig wallet via SafeProxyFactory",
+    txHash:
+      "0x1b26714409765f483cb4d455643510078c34f76cc850dc7b37f1b3176a5feea8",
+    contractName: "SafeProxyFactory",
+  },
 ];
