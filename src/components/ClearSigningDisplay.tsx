@@ -1,3 +1,4 @@
+import { useState } from "react";
 import type {
   DisplayModel,
   DisplayField,
@@ -27,6 +28,14 @@ function truncateBytes(hex: string, maxLen = 20): string {
 }
 
 function FieldWarning({ warning }: { warning: Warning }) {
+  if (warning.code === "UNKNOWN_ADDRESS") {
+    return (
+      <span className="mt-1 text-xs text-gray-400 italic">
+        No name for this address found.
+      </span>
+    );
+  }
+
   return (
     <span className="mt-1 inline-flex items-center gap-1 text-xs text-amber-600">
       <svg
@@ -78,6 +87,82 @@ function FieldValue({ field }: { field: DisplayField }) {
   }
 }
 
+function EmbeddedCallChip({ model }: { model: DisplayModel }) {
+  const [open, setOpen] = useState(false);
+
+  const contractName = model.metadata?.contractName;
+  const intentStr = typeof model.intent === "string" ? model.intent : undefined;
+
+  let summary: string | undefined;
+  if (model.interpolatedIntent !== undefined) {
+    summary = model.interpolatedIntent;
+  } else if (contractName !== undefined || intentStr !== undefined) {
+    summary = [contractName, intentStr].filter(Boolean).join(": ");
+  }
+
+  return (
+    <>
+      <div className="flex flex-col gap-2">
+        {summary !== undefined && (
+          <span className="text-sm text-gray-700">{summary}</span>
+        )}
+        <div className="flex items-center gap-3">
+          <span className="inline-flex items-center rounded-full bg-cerulean-50 px-2 py-0.5 text-xs font-medium text-cerulean-700 ring-1 ring-inset ring-cerulean-200">
+            Embedded Call
+          </span>
+          <button
+            onClick={() => {
+              setOpen(true);
+            }}
+            className="text-xs font-medium text-cerulean-600 hover:text-cerulean-800 hover:underline"
+          >
+            Details →
+          </button>
+        </div>
+      </div>
+
+      {open && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+          onClick={() => {
+            setOpen(false);
+          }}
+        >
+          <div
+            className="relative max-h-[80vh] w-full max-w-2xl overflow-y-auto rounded-xl bg-gray-50 p-6 shadow-xl"
+            onClick={(e) => {
+              e.stopPropagation();
+            }}
+          >
+            <div className="mb-4 flex items-center justify-between">
+              <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wide">
+                Embedded Call
+              </h3>
+              <button
+                onClick={() => {
+                  setOpen(false);
+                }}
+                className="rounded-md p-1 text-gray-400 hover:bg-gray-200 hover:text-gray-600"
+                aria-label="Close"
+              >
+                <svg
+                  className="h-5 w-5"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
+                  <path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z" />
+                </svg>
+              </button>
+            </div>
+            <ClearSigningDisplay model={model} />
+          </div>
+        </div>
+      )}
+    </>
+  );
+}
+
 function FieldRow({ field }: { field: DisplayField }) {
   return (
     <div className="flex flex-col gap-0.5 border-b border-gray-100 py-2.5 last:border-b-0 sm:flex-row sm:items-start sm:gap-4">
@@ -85,11 +170,10 @@ function FieldRow({ field }: { field: DisplayField }) {
         {field.label}
       </dt>
       <dd className="min-w-0 flex-1 break-all text-gray-900">
-        <FieldValue field={field} />
-        {field.calldataDisplay !== undefined && (
-          <div className="mt-2 rounded-md border border-gray-200 bg-gray-50 p-3">
-            <ClearSigningDisplay model={field.calldataDisplay} />
-          </div>
+        {field.calldataDisplay !== undefined ? (
+          <EmbeddedCallChip model={field.calldataDisplay} />
+        ) : (
+          <FieldValue field={field} />
         )}
         {field.warning !== undefined && (
           <div>
