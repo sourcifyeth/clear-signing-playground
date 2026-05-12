@@ -274,7 +274,16 @@ function App() {
               >
                 ERC-7730 Clear Signing
               </a>{" "}
-              standard
+              standard with the{" "}
+              <a
+                href="https://github.com/sourcifyeth/clear-signing"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-cerulean-600 underline hover:text-cerulean-800"
+              >
+                @sourcifyeth/clear-signing
+              </a>{" "}
+              library
             </p>
           )}
 

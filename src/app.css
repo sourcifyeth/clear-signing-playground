@@ -1,6 +1,7 @@
 @import "tailwindcss";
 @import "@fontsource-variable/ibm-plex-sans";
 @import "@fontsource/ibm-plex-mono";
+@import "@fontsource/vt323";
 
 @theme {
   --color-cerulean-50: #e8efff;
@@ -27,6 +28,7 @@
 
   --font-sans: "IBM Plex Sans Variable", system-ui, sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+  --font-vt323: "VT323", monospace;
 }
 
 html {

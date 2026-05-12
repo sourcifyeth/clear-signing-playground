@@ -22,6 +22,7 @@
   "dependencies": {
     "@fontsource-variable/ibm-plex-sans": "^5.0.0",
     "@fontsource/ibm-plex-mono": "^5.0.0",
+    "@fontsource/vt323": "^5.2.7",
     "@sourcifyeth/clear-signing": "git+https://github.com/sourcifyeth/clear-signing.git#8032f4dace99f0992448d69fae226fb49e4deca0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
@@ -30,6 +31,7 @@
   "devDependencies": {
     "@eslint/js": "^9.0.0",
     "@tailwindcss/vite": "^4.0.0",
+    "@types/node": "^22.0.0",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "@vitejs/plugin-react": "^4.0.0",
@@ -41,7 +43,6 @@
     "globals": "^15.0.0",
     "prettier": "^3.0.0",
     "tailwindcss": "^4.0.0",
-    "@types/node": "^22.0.0",
     "tsx": "^4.0.0",
     "typescript": "^5.0.0",
     "typescript-eslint": "^8.0.0",
