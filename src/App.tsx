@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import type { PublicClient } from "viem";
-import type { DisplayModel } from "@sourcifyeth/clear-signing";
-import { format } from "@sourcifyeth/clear-signing";
+import type { DisplayModel } from "@ethereum-sourcify/clear-signing";
+import { format } from "@ethereum-sourcify/clear-signing";
 
 import { DEFAULT_CHAIN_ID } from "./config/chains";
 import { createClient } from "./services/viemClient";
@@ -12,8 +12,8 @@ import {
 } from "./services/transactionService";
 import type { RawTransaction } from "./services/transactionService";
 import { useChains } from "./hooks/useChains";
+import { useRegistryIndex } from "./hooks/useRegistryIndex";
 import { exampleTransactions } from "./data/exampleTransactions";
-import registryIndex from "./generated/registry-index.json";
 
 import { Header } from "./components/Header";
 import { Footer } from "./components/Footer";
@@ -26,6 +26,7 @@ import { LoadingSpinner } from "./components/LoadingSpinner";
 
 function App() {
   const { chains, loading: chainsLoading, error: chainsError } = useChains();
+  const { index: registryIndex } = useRegistryIndex();
 
   const [txHash, setTxHash] = useState("");
   const [rawTransaction, setRawTransaction] = useState<RawTransaction | null>(
@@ -98,10 +99,10 @@ function App() {
           const libraryTx = rawToLibraryTransaction(raw, DEFAULT_CHAIN_ID);
           const model = await format(libraryTx, {
             externalDataProvider: createExternalDataProvider(currentClient),
-            descriptorResolverOptions: {
-              type: "github",
-              index: registryIndex,
-            },
+            descriptorResolverOptions:
+              registryIndex !== null
+                ? { type: "github", index: registryIndex }
+                : { type: "github" },
           });
 
           // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- ref is mutated externally
@@ -131,7 +132,7 @@ function App() {
         setLoadingTx(false);
       }
     })();
-  }, [client, txHash]);
+  }, [client, txHash, registryIndex]);
 
   const handleExampleSelect = useCallback(
     (hash: string) => {
@@ -174,10 +175,10 @@ function App() {
             const libraryTx = rawToLibraryTransaction(raw, DEFAULT_CHAIN_ID);
             const model = await format(libraryTx, {
               externalDataProvider: createExternalDataProvider(currentClient),
-              descriptorResolverOptions: {
-                type: "github",
-                index: registryIndex,
-              },
+              descriptorResolverOptions:
+                registryIndex !== null
+                  ? { type: "github", index: registryIndex }
+                  : { type: "github" },
             });
 
             // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- ref is mutated externally
@@ -210,7 +211,7 @@ function App() {
         }
       })();
     },
-    [client],
+    [client, registryIndex],
   );
 
   const handleViewToggle = useCallback((view: "raw" | "clear") => {

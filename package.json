@@ -5,9 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "npm run build:index && npm run build:chain-info && tsc -b && vite build",
-    "build:index": "tsx scripts/build-index.ts",
-    "build:index:force": "tsx scripts/build-index.ts --force",
+    "build": "npm run build:chain-info && tsc -b && vite build",
     "build:chain-info": "tsx scripts/build-chain-info.ts",
     "build:chain-info:force": "tsx scripts/build-chain-info.ts --force",
     "fix": "npm run fix:prettier && npm run fix:eslint",
@@ -20,10 +18,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@ethereum-sourcify/clear-signing": "^0.1.2",
     "@fontsource-variable/ibm-plex-sans": "^5.0.0",
     "@fontsource/ibm-plex-mono": "^5.0.0",
     "@fontsource/vt323": "^5.2.7",
-    "@sourcifyeth/clear-signing": "git+https://github.com/sourcifyeth/clear-signing.git#8032f4dace99f0992448d69fae226fb49e4deca0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "viem": "^2.0.0"

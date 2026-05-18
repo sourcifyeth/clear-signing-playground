@@ -1,5 +1,5 @@
 import type { PublicClient } from "viem";
-import type { Transaction } from "@sourcifyeth/clear-signing";
+import type { Transaction } from "@ethereum-sourcify/clear-signing";
 
 /**
  * Raw transaction data as returned by viem's `getTransaction`.

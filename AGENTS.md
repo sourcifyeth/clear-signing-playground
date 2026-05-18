@@ -2,22 +2,20 @@
 
 ## Project overview
 
-Clear Signing Playground — a React web app for trying out the `@sourcifyeth/clear-signing` library, which implements [EIP-7730](https://eips.ethereum.org/EIPS/eip-7730) clear signing (human-readable transaction previews).
+Clear Signing Playground — a React web app for trying out the `@ethereum-sourcify/clear-signing` library, which implements [EIP-7730](https://eips.ethereum.org/EIPS/eip-7730) clear signing (human-readable transaction previews).
 
 ## Tech stack
 
 - **React 19** + **TypeScript** (strict) + **Vite**
 - **Tailwind CSS v4** with Sourcify-inspired theme (Cerulean Blue / Light Coral, IBM Plex fonts)
 - **viem** for Ethereum RPC calls
-- **`@sourcifyeth/clear-signing`** as a git dependency (pinned to a commit hash in package.json). The library builds at install time via its `prepare` script.
+- **`@ethereum-sourcify/clear-signing`** from npm.
 
 ## Key commands
 
 ```bash
 npm run dev             # Start dev server
-npm run build           # Full build (index + tsc + vite)
-npm run build:index     # Rebuild ERC-7730 registry index
-npm run build:index:force  # Force rebuild (ignores cache)
+npm run build           # Full build (chain-info + tsc + vite)
 npm run lint            # ESLint
 npm run format          # Prettier
 ```
@@ -40,9 +38,9 @@ The tsconfig is very strict. Watch out for:
 
 ## Architecture
 
-### Registry index (build-time)
+### Registry index (runtime)
 
-`scripts/build-index.ts` calls `createGitHubRegistryIndex()` from the library to fetch ERC-7730 descriptor metadata from the ethereum/clear-signing-erc7730-registry on GitHub. Output goes to `src/generated/registry-index.json` (gitignored). Cached for 1 week in dev; use `--force` to rebuild.
+The ERC-7730 registry index is fetched once at app startup via `fetchPrebuiltRegistryIndex()` from the library (see `src/hooks/useRegistryIndex.ts`) and reused for every `format()` call. If the index hasn't loaded yet (or fetch failed), `format()` is called without `index` — the library falls back to re-fetching the prebuilt indexes on each call.
 
 ### Chain configuration
 
@@ -65,17 +63,16 @@ Mobile-first, Sourcify-themed UI. Key components:
 ### App flow
 
 1. Load chains from chainid.network → create viem client
-2. User enters tx hash or picks an example
-3. Fetch raw tx → format with library → show both raw and clear signing views (side-by-side on large screens, tabbed on small screens)
+2. In parallel, fetch the prebuilt ERC-7730 registry index once
+3. User enters tx hash or picks an example
+4. Fetch raw tx → format with library (passing the cached index when available) → show both raw and clear signing views (side-by-side on large screens, tabbed on small screens)
 
 ## Updating the library
 
-The `@sourcifyeth/clear-signing` dependency is pinned to a git commit hash. To update:
+`@ethereum-sourcify/clear-signing` is a regular npm dependency. To update:
 
-1. Get the latest commit: `git ls-remote https://github.com/sourcifyeth/clear-signing.git HEAD`
-2. Update the hash in `package.json`
-3. `rm -rf node_modules/@sourcifyeth/clear-signing && npm install`
-4. Check for type changes in `node_modules/@sourcifyeth/clear-signing/dist/types.d.ts`
+1. `npm install @ethereum-sourcify/clear-signing@latest`
+2. Check for type changes in `node_modules/@ethereum-sourcify/clear-signing/dist/types.d.ts`
 
 ## Known TODOs
 

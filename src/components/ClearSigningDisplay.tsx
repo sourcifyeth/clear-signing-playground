@@ -5,8 +5,8 @@ import type {
   DisplayFieldGroup,
   EmbeddedCalldata,
   Warning,
-} from "@sourcifyeth/clear-signing";
-import { isFieldGroup } from "@sourcifyeth/clear-signing";
+} from "@ethereum-sourcify/clear-signing";
+import { isFieldGroup } from "@ethereum-sourcify/clear-signing";
 import { WarningBanner } from "./WarningBanner";
 import { MetadataPopover } from "./MetadataPopover";
 

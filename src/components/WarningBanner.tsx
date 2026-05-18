@@ -1,4 +1,4 @@
-import type { Warning } from "@sourcifyeth/clear-signing";
+import type { Warning } from "@ethereum-sourcify/clear-signing";
 
 interface WarningBannerProps {
   warnings: Warning[];

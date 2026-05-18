@@ -2,7 +2,7 @@ import type { PublicClient } from "viem";
 import type {
   DescriptorAddressType,
   ExternalDataProvider,
-} from "@sourcifyeth/clear-signing";
+} from "@ethereum-sourcify/clear-signing";
 import chainInfo from "../generated/chain-info.json";
 
 const erc20Abi = [

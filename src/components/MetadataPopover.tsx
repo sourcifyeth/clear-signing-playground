@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { DisplayModel } from "@sourcifyeth/clear-signing";
+import type { DisplayModel } from "@ethereum-sourcify/clear-signing";
 
 interface MetadataPopoverProps {
   metadata: DisplayModel["metadata"];

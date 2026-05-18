@@ -8,7 +8,7 @@ const links = [
     href: "https://eips.ethereum.org/EIPS/eip-7730",
   },
   {
-    label: "TS SDK @sourcifyeth/clear-signing",
+    label: "TS SDK @ethereum-sourcify/clear-signing",
     href: "https://github.com/sourcifyeth/clear-signing",
   },
   {
