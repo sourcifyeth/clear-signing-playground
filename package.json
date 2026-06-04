@@ -18,7 +18,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@ethereum-sourcify/clear-signing": "^0.1.2",
+    "@ethereum-sourcify/clear-signing": "0.2.0",
     "@fontsource-variable/ibm-plex-sans": "^5.0.0",
     "@fontsource/ibm-plex-mono": "^5.0.0",
     "@fontsource/vt323": "^5.2.7",
