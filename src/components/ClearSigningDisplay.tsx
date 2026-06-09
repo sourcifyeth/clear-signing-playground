@@ -354,6 +354,70 @@ function RawCalldataDisplay({
   );
 }
 
+function FieldsList({ fields }: { fields: DisplayModel["fields"] }) {
+  if (fields === undefined) return null;
+  return (
+    <dl className="space-y-0">
+      {fields.map((field, index) =>
+        isFieldGroup(field) ? (
+          <FieldGroupDisplay key={index} group={field} />
+        ) : (
+          <FieldRow key={index} field={field} />
+        ),
+      )}
+    </dl>
+  );
+}
+
+function FieldsSection({
+  fields,
+  collapsible,
+}: {
+  fields: DisplayModel["fields"];
+  collapsible: boolean;
+}) {
+  const [isOpen, setIsOpen] = useState(false);
+
+  if (!collapsible) {
+    return <FieldsList fields={fields} />;
+  }
+
+  return (
+    <div>
+      <button
+        type="button"
+        onClick={() => {
+          setIsOpen((prev) => !prev);
+        }}
+        className="flex w-full items-center justify-between py-1 text-left transition-colors hover:bg-gray-50"
+        aria-expanded={isOpen}
+      >
+        <span className="text-sm font-medium text-gray-700">
+          Transaction Fields
+        </span>
+        <svg
+          className={`h-4 w-4 text-gray-400 transition-transform ${isOpen ? "rotate-180" : ""}`}
+          viewBox="0 0 20 20"
+          fill="currentColor"
+          aria-hidden="true"
+        >
+          <path
+            fillRule="evenodd"
+            d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
+            clipRule="evenodd"
+          />
+        </svg>
+      </button>
+
+      {isOpen && (
+        <div className="pt-2">
+          <FieldsList fields={fields} />
+        </div>
+      )}
+    </div>
+  );
+}
+
 export function ClearSigningDisplay({ model }: ClearSigningDisplayProps) {
   const hasCardContent =
     model.metadata?.contractName !== undefined ||
@@ -415,15 +479,10 @@ export function ClearSigningDisplay({ model }: ClearSigningDisplayProps) {
 
           {/* Fields */}
           {model.fields !== undefined && model.fields.length > 0 && (
-            <dl className="space-y-0">
-              {model.fields.map((field, index) =>
-                isFieldGroup(field) ? (
-                  <FieldGroupDisplay key={index} group={field} />
-                ) : (
-                  <FieldRow key={index} field={field} />
-                ),
-              )}
-            </dl>
+            <FieldsSection
+              fields={model.fields}
+              collapsible={model.interpolatedIntent !== undefined}
+            />
           )}
 
           {/* Metadata — inside the card, collapsed by default */}
