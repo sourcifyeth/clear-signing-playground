@@ -4,6 +4,7 @@ import type { DisplayModel } from "@ethereum-sourcify/clear-signing";
 import { format } from "@ethereum-sourcify/clear-signing";
 
 import { DEFAULT_CHAIN_ID } from "./config/chains";
+import { TRUSTED_TOKENS } from "./config/trustedTokens";
 import { createClient } from "./services/viemClient";
 import { createExternalDataProvider } from "./services/externalDataProvider";
 import {
@@ -101,8 +102,12 @@ function App() {
             externalDataProvider: createExternalDataProvider(currentClient),
             descriptorResolverOptions:
               registryIndex !== null
-                ? { type: "github", index: registryIndex }
-                : { type: "github" },
+                ? {
+                    type: "github",
+                    index: registryIndex,
+                    trustedTokens: TRUSTED_TOKENS,
+                  }
+                : { type: "github", trustedTokens: TRUSTED_TOKENS },
           });
 
           // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- ref is mutated externally
@@ -177,8 +182,12 @@ function App() {
               externalDataProvider: createExternalDataProvider(currentClient),
               descriptorResolverOptions:
                 registryIndex !== null
-                  ? { type: "github", index: registryIndex }
-                  : { type: "github" },
+                  ? {
+                      type: "github",
+                      index: registryIndex,
+                      trustedTokens: TRUSTED_TOKENS,
+                    }
+                  : { type: "github", trustedTokens: TRUSTED_TOKENS },
             });
 
             // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- ref is mutated externally

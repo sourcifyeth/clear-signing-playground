@@ -12,6 +12,13 @@ export interface ExampleTransaction {
  */
 export const exampleTransactions: ExampleTransaction[] = [
   {
+    name: "USDC Transfer",
+    description: "Send USDC stablecoin to another address",
+    txHash:
+      "0x54f28ba07213e48590936f5b84359d4aff1fafcef305c7f4ec0cdc0c7c95d3be",
+    contractName: "USDC",
+  },
+  {
     name: "Uniswap V3 Swap",
     description: "Token swap on the Uniswap V3 SwapRouter02",
     txHash:
