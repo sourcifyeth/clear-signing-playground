@@ -7,11 +7,13 @@ import type {
   Warning,
 } from "@ethereum-sourcify/clear-signing";
 import { isFieldGroup } from "@ethereum-sourcify/clear-signing";
+import { ExternalLink } from "./ExternalLink";
 import { WarningBanner } from "./WarningBanner";
 import { MetadataPopover } from "./MetadataPopover";
 
 interface ClearSigningDisplayProps {
   model: DisplayModel;
+  descriptorUrl?: string | undefined;
 }
 
 function truncateAddress(address: string): string {
@@ -418,7 +420,10 @@ function FieldsSection({
   );
 }
 
-export function ClearSigningDisplay({ model }: ClearSigningDisplayProps) {
+export function ClearSigningDisplay({
+  model,
+  descriptorUrl,
+}: ClearSigningDisplayProps) {
   const hasCardContent =
     model.metadata?.contractName !== undefined ||
     model.interpolatedIntent !== undefined ||
@@ -436,9 +441,14 @@ export function ClearSigningDisplay({ model }: ClearSigningDisplayProps) {
       {/* Clear Transaction card */}
       {hasCardContent && (
         <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm sm:p-6">
-          <h3 className="mb-4 text-base font-semibold text-gray-800">
-            Clear Transaction
-          </h3>
+          <div className="mb-4 flex items-center justify-between gap-3">
+            <h3 className="text-base font-semibold text-gray-800">
+              Clear Transaction
+            </h3>
+            {descriptorUrl !== undefined && (
+              <ExternalLink href={descriptorUrl}>Descriptor JSON</ExternalLink>
+            )}
+          </div>
 
           {/* Interacting with + Intent */}
           <div className="mb-5 space-y-2">

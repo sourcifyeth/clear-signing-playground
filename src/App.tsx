@@ -15,6 +15,7 @@ import type { RawTransaction } from "./services/transactionService";
 import { useChains } from "./hooks/useChains";
 import { useRegistryIndex } from "./hooks/useRegistryIndex";
 import { exampleTransactions } from "./data/exampleTransactions";
+import { getDescriptorUrl, getExplorerTxUrl } from "./services/registryLinks";
 
 import { Header } from "./components/Header";
 import { Footer } from "./components/Footer";
@@ -41,14 +42,27 @@ function App() {
 
   const cancelledRef = useRef(false);
 
+  const chainConfig = useMemo(
+    () => chains.find((c) => c.chainId === DEFAULT_CHAIN_ID),
+    [chains],
+  );
+
   // Create viem client once chains are loaded
   const client: PublicClient | null = useMemo(() => {
-    const chainConfig = chains.find((c) => c.chainId === DEFAULT_CHAIN_ID);
     if (chainConfig === undefined) {
       return null;
     }
     return createClient(chainConfig);
-  }, [chains]);
+  }, [chainConfig]);
+
+  const explorerTxUrl =
+    rawTransaction !== null
+      ? getExplorerTxUrl(chainConfig?.explorerUrl, rawTransaction.hash)
+      : undefined;
+  const descriptorUrl =
+    rawTransaction?.to != null && registryIndex !== null
+      ? getDescriptorUrl(registryIndex, DEFAULT_CHAIN_ID, rawTransaction.to)
+      : undefined;
 
   // Cleanup on unmount
   useEffect(() => {
@@ -343,11 +357,20 @@ function App() {
               {/* Small screens: tabbed view */}
               <div className="lg:hidden">
                 {activeView === "raw" ? (
-                  <RawTransactionView transaction={rawTransaction} />
+                  <RawTransactionView
+                    transaction={rawTransaction}
+                    client={client}
+                    registryIndex={registryIndex}
+                    chainId={DEFAULT_CHAIN_ID}
+                    explorerTxUrl={explorerTxUrl}
+                  />
                 ) : loadingFormat ? (
                   <LoadingSpinner message="Formatting..." />
                 ) : displayModel !== null ? (
-                  <ClearSigningDisplay model={displayModel} />
+                  <ClearSigningDisplay
+                    model={displayModel}
+                    descriptorUrl={descriptorUrl}
+                  />
                 ) : (
                   <div className="rounded-lg border border-gray-200 bg-white px-4 py-8 text-center text-sm text-gray-500">
                     Clear signing data not yet available.
@@ -358,13 +381,22 @@ function App() {
               {/* Large screens: side-by-side */}
               <div className="hidden lg:grid lg:grid-cols-2 lg:gap-6">
                 <div>
-                  <RawTransactionView transaction={rawTransaction} />
+                  <RawTransactionView
+                    transaction={rawTransaction}
+                    client={client}
+                    registryIndex={registryIndex}
+                    chainId={DEFAULT_CHAIN_ID}
+                    explorerTxUrl={explorerTxUrl}
+                  />
                 </div>
                 <div>
                   {loadingFormat ? (
                     <LoadingSpinner message="Formatting..." />
                   ) : displayModel !== null ? (
-                    <ClearSigningDisplay model={displayModel} />
+                    <ClearSigningDisplay
+                      model={displayModel}
+                      descriptorUrl={descriptorUrl}
+                    />
                   ) : (
                     <div className="rounded-lg border border-gray-200 bg-white px-4 py-8 text-center text-sm text-gray-500">
                       Clear signing data not yet available.

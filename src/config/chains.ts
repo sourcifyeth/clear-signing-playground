@@ -2,6 +2,8 @@ export interface ChainConfig {
   chainId: number;
   name: string;
   rpcUrls: string[];
+  /** Base URL of the first block explorer listed on chainid.network, if any. */
+  explorerUrl?: string;
 }
 
 export type ChainsData = {
@@ -51,10 +53,13 @@ export async function fetchChainConfigs(): Promise<ChainConfig[]> {
       (url) => url.startsWith("https://") && !url.includes("${"),
     );
 
+    const explorerUrl = entry.explorers?.[0]?.url.replace(/\/$/, "");
+
     configs.push({
       chainId: entry.chainId,
       name: entry.name,
       rpcUrls,
+      ...(explorerUrl !== undefined ? { explorerUrl } : {}),
     });
   }
 
