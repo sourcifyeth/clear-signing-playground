@@ -37,7 +37,7 @@ jobs:
         uses: "google-github-actions/setup-gcloud@e427ad8a34f8676edf47cf7d7925499adf3eb74f" # v2.2.1
 
       - name: Clear bucket
-        run: gsutil -m rm gs://clear-signing-playground/** || true
+        run: gcloud storage rm "gs://clear-signing-playground/**" || true
 
       - name: Upload files to bucket
         uses: google-github-actions/upload-cloud-storage@c0f6160ff80057923ff50e5e567695cea181ec23 # v2.2.4
